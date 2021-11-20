@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if error %}
+<h1 align="center"><a href="/register/">Register</a> or <a href="/login/">Log In</a> for using this page!</h1>
+{% else %}
+<div class="container">
+<div class="row">
+     <div class="col">
+        <hr>
+        <h2>Welcome, {{ session['username' ]}}</h2>
+        <hr>
+    </div>
+    <div class="col-md-auto">
+        <hr>
+        <p></p>
+        <hr>
+    </div>
+    <div class="col col-lg-2">
+        <hr>
+        <a type="button" class="btn btn-outline-danger" href="/logout/" align="center">Log Out</a>
+        <hr>
+    </div>
+</div>
+</div>
+<div class="row">
+<div class="col">
+    <div class="card" style="width: 20rem;">
+      <div class="card-header">
+        Information about you
+      </div>
+      <ul class="list-group list-group-flush">
+          {% for data in data %}
+          <li class="list-group-item"><img src="{{ data['photo'] }}" width="280" height="300" /></li>
+        <li class="list-group-item">Username: {{ data['username'] }}</li>
+        <li class="list-group-item">Email: {{ data['email'] }}</li>
+        <li class="list-group-item">Rank: {{ data['rank_show'] }}</li>
+          {% endfor %}
+      </ul>
+        {% if form %}
+        <form action="/photo" method='post' enctype="multipart/form-data">
+            <li class="list-group-item"><input name="file" type="file" id="file"></li>
+            <input type='submit' value="Send" class="btn btn-outline-info btn-lg">
+        </form>
+        {% else %}
+        <a type="button" class="btn btn-outline-info" href="{{ url_for('profile', edit='True') }}">Edit</a>
+        {% endif %}
+    </div>
+    </div>
+   <div class="col">
+        <hr>
+        <p>New</p>
+        <hr>
+       {% for data in new %}
+           <div class="card">
+              <div class="card-header">
+                Application №   : {{ data['_id'] }}
+              </div>
+           <ul class="list-group list-group-flush">
+                <li class="list-group-item">Full name: {{ data['first_name'] }} {{ data['second_name'] }}</li>
+               <li class="list-group-item">Phone: {{ data['phone'] }}</li>
+                <li class="list-group-item">Application: {{ data['application'] }}</li>
+                <li class="list-group-item">Location: {{ data['locations'] }}</li>
+                <li class="list-group-item">Created: {{ data['created'] }}</li>
+               <li class="list-group-item">Status: {{ data['status'] }}</li>
+               <li class="list-group-item">Checker: {{ data['check'] }}</li>
+               <li class="list-group-item">Classifier: {{ data['classifier'] }}</li>
+               <li class="list-group-item">History of check: {{ data['history'] }}</li>
+               <li class="list-group-item">Evidence: {{data['evidence']}}</li>
+               <li class="list-group-item"><div align='center' ><a href="{{ url_for('check_precinct', text=data['application'], id=data['_id']) }}" type="button" class="btn btn-outline-success btn-lg">Check</a><a href="{{ url_for('delete', text=data['application'], id=data['_id']) }}" type="button" class="btn btn-outline-danger btn-lg">Delete</a></div></li>
+           </ul>
+           </div>
+           <p>   </p>
+       {% endfor %}
+    </div>
+    <div class="col">
+        <hr>
+        <p>Your applications</p>
+        <hr>
+        {% for data in your %}
+           <div class="card">
+              <div class="card-header">
+                Application №   : {{ data['_id'] }}
+              </div>
+           <ul class="list-group list-group-flush">
+                <li class="list-group-item">Full name: {{ data['first_name'] }}  {{ data['second_name'] }}</li>
+               <li class="list-group-item">Phone: {{ data['phone'] }}</li>
+                <li class="list-group-item">Application: {{ data['application'] }}</li>
+               <li class="list-group-item">Location: {{ data['locations'] }}</li>
+                <li class="list-group-item">Created: {{ data['created'] }}</li>
+               <li class="list-group-item">Status: {{ data['status'] }}</li>
+               <li class="list-group-item">Checker: {{ data['check'] }}</li>
+               <li class="list-group-item">Classifier: {{ data['classifier'] }}</li>
+               <li class="list-group-item">History of check: {{ data['history'] }}</li>
+               <li class="list-group-item">Evidence: {{data['evidence']}}</li>
+               {% if investigator %}
+               <form action="{{ url_for('evidence', id=data['_id'])}}" method="post">
+                   <input type="text" name="evidence">
+                   <input type="submit">
+               </form>
+               {% endif %}
+               {% if precinct %}
+               <form action="{{ url_for('evidence', id=data['_id'])}}" method="post">
+                   <input type="text" name="evidence">
+                   <input type="submit">
+               </form>
+               {% endif %}
+               {% if precinct %}
+               <li class="list-group-item">
+                    <div align="center">
+                   <div class="btn-group dropright">
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Choose an investigator
+                      </button>
+                      <div class="dropdown-menu">
+                          <a class="dropdown-item" href="{{ url_for('choose_investigator', investigator='worker2.1', text=data['application']) }}">Killing Investigator</a>
+                          <a class="dropdown-item" href="{{ url_for('choose_investigator', investigator='worker2.2', text=data['application']) }}">Theft Investigator</a>
+                          <a class="dropdown-item" href="{{ url_for('choose_investigator', investigator='worker2.3', text=data['application']) }}">Abduction Investigator</a>
+                      </div>
+                    </div>
+                    </div>
+               </li>
+               {% endif %}
+               {% if investigator %}
+               <li class="list-group-item"><div align='center' ><a href="{{ url_for('send_precinct', text=data['application'], id=data['_id']) }}" type="button" class="btn btn-outline-success btn-lg">Send</a><a href="{{ url_for('delete', text=data['application']) }}" type="button" class="btn btn-outline-danger btn-lg">Delete</a></div></li>
+               {% endif %}
+               {% if prosecutor %}
+               <li class="list-group-item"><div align='center' ><a href="{{ url_for('send_precinct', text=data['application'], id=data['_id']) }}" type="button" class="btn btn-outline-success btn-lg">Finish</a><a href="{{ url_for('close', text=data['application'], id=data['_id']) }}" type="button" class="btn btn-outline-danger btn-lg">Return</a></div></li>
+               {% endif %}
+           </ul>
+
+           </div>
+           <p>   </p>
+       {% endfor %}
+    </div>
+</div>
+
+
+{% endif %}
+{% endblock %}

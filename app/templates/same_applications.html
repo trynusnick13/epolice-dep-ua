@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+         <div class="col">
+             <hr>
+             <p>Available applications</p>
+            <hr>
+           {% for data in new %}
+               <div class="card">
+                  <div class="card-header">
+                    Application №   : {{ data['_id'] }}
+                  </div>
+               <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Username: {{ data['username'] }}</li>
+                    <li class="list-group-item">Application: {{ data['application'] }}</li>
+                    <li class="list-group-item">Created: {{ data['created'] }}</li>
+                   <li class="list-group-item">Status: {{ data['status'] }}</li>
+                   <li class="list-group-item">Checker: {{ data['check'] }}</li>
+                   <li class="list-group-item">Classifier: {{ data['classifier'] }}</li>
+                   <li class="list-group-item">History of check: {{ data['history'] }}</li>
+                   <li class="list-group-item"><div align='center' ><a href="{{ url_for('same_applications', cat=data['classifier']) }}" type="button" class="btn btn-outline-success btn-lg">Show same</a></li>
+               </ul>
+               </div>
+               <p>   </p>
+           {% endfor %}
+         </div>
+        <div class="col">
+            <hr>
+            <p>Same applications</p>
+            <hr>
+       {% for data in same %}
+           <div class="card">
+              <div class="card-header">
+                Application №   : {{ data['_id'] }}
+              </div>
+           <ul class="list-group list-group-flush">
+                <li class="list-group-item">Username: {{ data['username'] }}</li>
+                <li class="list-group-item">Application: {{ data['application'] }}</li>
+                <li class="list-group-item">Created: {{ data['created'] }}</li>
+               <li class="list-group-item">Status: {{ data['status'] }}</li>
+               <li class="list-group-item">Checker: {{ data['check'] }}</li>
+               <li class="list-group-item">Classifier: {{ data['classifier'] }}</li>
+               <li class="list-group-item">History of check: {{ data['history'] }}</li>
+           </ul>
+           </div>
+           <p>   </p>
+       {% endfor %}
+         </div>
+    </div>
+</div>
+
+
+{% endblock %}

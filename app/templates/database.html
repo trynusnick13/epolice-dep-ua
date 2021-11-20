@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="col">
+        <hr>
+        <h2>Open</h2>
+        <hr>
+        {% for open in open %}
+            <div class="card">
+                <div class="card-header">
+                    Application №   : {{ open['_id'] }}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Username: {{ open['username'] }}</li>
+                    <li class="list-group-item">Application: {{ open['application'] }}</li>
+                    <li class="list-group-item">Created: {{ open['created'] }}</li>
+                    <li class="list-group-item">Status: {{ open['status'] }}</li>
+                    <li class="list-group-item">Checker: {{ open['check'] }}</li>
+                    <li class="list-group-item">Classifier: {{ open['classifier'] }}</li>
+                    <li class="list-group-item">History of check: {{ open['history'] }}</li>
+                    <li class="list-group-item"><div align='center' ><a href="{{ url_for('delete1', text=open['application'], id=open['_id']) }}" type="button" class="btn btn-outline-danger btn-lg">Delete</a></div></li>
+                </ul>
+            </div>
+            <p>   </p>
+        {% endfor %}
+    </div>
+    <hr>
+    <h2>Finished</h2>
+    <hr>
+    {% for finished in finished %}
+        <div class="card">
+            <div class="card-header">
+                Application №   : {{ finished['_id'] }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Username: {{ finished['username'] }}</li>
+                <li class="list-group-item">Application: {{ finished['application'] }}</li>
+                <li class="list-group-item">Created: {{ finished['created'] }}</li>
+                <li class="list-group-item">Status: {{ finished['status'] }}</li>
+                <li class="list-group-item">Checker: {{ finished['check'] }}</li>
+                <li class="list-group-item">Classifier: {{ finished['classifier'] }}</li>
+                <li class="list-group-item">History of check: {{ finished['history'] }}</li>
+                <li class="list-group-item"><div align='center' ><a href="{{ url_for('delete1', text=finished['application'], id=finished['_id']) }}" type="button" class="btn btn-outline-danger btn-lg">Delete</a></div></li>
+            </ul>
+        </div>
+        <p>   </p>
+    {% endfor %}
+</div>
+{% endblock %}

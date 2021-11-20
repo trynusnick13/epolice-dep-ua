@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1 align="center">Register</h1>
+	<form method=post action="/register/">
+		{{ form.hidden_tag() }}
+		<dl>
+			<div class="form-group">
+				{{ form.username.label }}<br>
+				{{ form.username(class='form-control') }}
+			</div>
+			<div class="form-group">
+				{{ form.email.label }}<br>
+				{{ form.email(class='form-control') }}
+			</div>
+			<div class="form-group">
+				{{ form.password.label }}<br>
+				{{ form.password(class='form-control') }}
+			</div>
+			<div class="form-group">
+				{{ form.confirm.label }}<br>
+				{{ form.confirm(class='form-control') }}
+			</div>
+			<div class="form-group">
+				{{ form.key.label }}<br>
+				{{ form.key(class='form-control') }}
+			</div>
+			<div class="form-group" align="center">
+				{{ form.accept_tos(class="form-check-input") }}
+				{{ form.accept_tos.label(class="form-check-label") }}
+			</div>
+		</dl>
+		<div align="center">
+			<button type="submit" class="btn btn-primary">Register</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

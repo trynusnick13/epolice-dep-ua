@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div align="center">
+    <div>
+    <p> </p>
+    </div>
+
+    <h2>Welcome to the Police Departmnet Portal!</h2>
+
+    <div>
+    <p> </p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+          <div class="container">
+              <div class="row">
+              <div class="col-10">
+                  <span style="color: red">Dear citizens</span>, if you <b>become a victim</b>
+                  of a crime or attempt on you, please, immediately
+                  <a href="/application">fill out the application form</a> or <a href="/uploads">print</a> a statement from our website.
+              </div>
+              <div class="col-2">
+                  <a href="/application" class="btn btn-primary btn-lg" role="button">APPLY!</a>
+              </div>
+      </div>
+    </div>
+    </div>
+    </div>
+
+    <div>
+    <p> </p>
+    </div>
+
+        <div class="card">
+            <div class="card-body">
+              If you have witnessed a crime, then we ask you to immediately call the police and testify.
+                <b>Let's fight rime together!</b> <a href="/contact">How to contact with us?</a>
+            </div>
+        </div>
+    <div>
+
+    <div>
+    <p> </p>
+    </div>
+
+    </div>
+        <div class="card text-center">
+        <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="/index">MOST WANTED</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/index1">MISSING PERSON</a>
+            </li>
+        </ul>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">MISSING PEOPLE</h5>
+            <img src="/static/missing.png" width="800px" height="500px">
+        </div>
+            <p style="color: red">If you saw any of these people, please contact us at the <a href="/contact" style="color: red"><u>following numbers</u></a></p>
+    </div>
+    </div>
+</div>
+
+{% endblock %}
