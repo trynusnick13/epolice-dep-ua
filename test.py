@@ -13,3 +13,5 @@ applic = applic['applications']
 id = ObjectId('5ede913021cf2c25c3f5f912')
 applic.update_one({'_id': id},
                   {"$set": {'check': None, 'level': 'end', 'status': 'Closed'}})
+
+

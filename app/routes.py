@@ -1,6 +1,5 @@
 import hashlib
 import os
-import pickle
 import re
 from datetime import datetime
 
@@ -13,9 +12,6 @@ from Cryptodome.PublicKey import RSA
 from Cryptodome.Signature import PKCS1_v1_5
 from bson.objectid import ObjectId
 from flask import render_template, redirect, request, flash, url_for, session, send_file
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
 from werkzeug.utils import secure_filename
 
 from app import app
@@ -100,84 +96,84 @@ def applications():
         check = None
         status = 'Not reviewed'
 
-        lemmatizer = WordNetLemmatizer()
-        stop_words = set(stopwords.words('english'))
-        word_tokens = word_tokenize(application)
-        filtered_sentence = [w for w in word_tokens if not w in stop_words]
-        singles = ' '.join([lemmatizer.lemmatize(plural).upper() for plural in filtered_sentence])
-
-        loaded_model = pickle.load(open('classifiers/finalized_model.sav', 'rb'))
-        pred = loaded_model.predict([singles])
-        pred = int(pred[0])
-
-        if pred == 0:
-            result = 'GAMBLING'
-        elif pred == 1:
-            result = 'HUMAN TRAFFICKING'
-        elif pred == 2:
-            result = 'NON-CRIMINAL'
-        elif pred == 3:
-            result = 'PUBLIC INDECENCY'
-        elif pred == 4:
-            result = 'NARCOTICS'
-        elif pred == 5:
-            result = 'NON-CRIMINAL (SUBJECT SPECIFIED)'
-        elif pred == 6:
-            result = 'MOTOR VEHICLE THEFT'
-        elif pred == 7:
-            result = 'DECEPTIVE PRACTICE'
-        elif pred == 8:
-            result = 'OTHER OFFENSE'
-        elif pred == 9:
-            result = 'THEFT'
-        elif pred == 10:
-            result = 'HOMICIDE'
-        elif pred == 11:
-            result = 'ARSON'
-        elif pred == 12:
-            result = 'PUBLIC PEACE VIOLATION'
-        elif pred == 13:
-            result = 'INTIMIDATION'
-        elif pred == 14:
-            result = 'CONCEALED CARRY LICENSE VIOLATION'
-        elif pred == 15:
-            result = 'PROSTITUTION'
-        elif pred == 16:
-            result = 'CRIM SEXUAL ASSAULT'
-        elif pred == 17:
-            result = 'KIDNAPPING'
-        elif pred == 18:
-            result = 'STALKING'
-        elif pred == 19:
-            result = 'OTHER NARCOTIC VIOLATION'
-        elif pred == 20:
-            result = 'BATTERY'
-        elif pred == 21:
-            result = 'ASSAULT'
-        elif pred == 22:
-            result = 'BURGLARY'
-        elif pred == 23:
-            result = 'CRIMINAL TRESPASS'
-        elif pred == 24:
-            result = 'ROBBERY'
-        elif pred == 25:
-            result = 'INTERFERENCE WITH PUBLIC OFFICER'
-        elif pred == 26:
-            result = 'CRIMINAL DAMAGE'
-        elif pred == 27:
-            result = 'OFFENSE INVOLVING CHILDREN'
-        elif pred == 28:
-            result = 'SEX OFFENSE'
-        elif pred == 29:
-            result = 'OBSCENITY'
-        elif pred == 30:
-            result = 'NON - CRIMINAL'
-        elif pred == 31:
-            result = 'WEAPONS VIOLATION'
-        elif pred == 32:
-            result = 'LIQUOR LAW VIOLATION'
-        else:
-            result = 'OTHER'
+        # lemmatizer = WordNetLemmatizer()
+        # stop_words = set(stopwords.words('english'))
+        # word_tokens = word_tokenize(application)
+        # filtered_sentence = [w for w in word_tokens if not w in stop_words]
+        # singles = ' '.join([lemmatizer.lemmatize(plural).upper() for plural in filtered_sentence])
+        #
+        # loaded_model = pickle.load(open('classifiers/finalized_model.sav', 'rb'))
+        # pred = loaded_model.predict([singles])
+        # pred = int(pred[0])
+        #
+        # if pred == 0:
+        #     result = 'GAMBLING'
+        # elif pred == 1:
+        #     result = 'HUMAN TRAFFICKING'
+        # elif pred == 2:
+        #     result = 'NON-CRIMINAL'
+        # elif pred == 3:
+        #     result = 'PUBLIC INDECENCY'
+        # elif pred == 4:
+        #     result = 'NARCOTICS'
+        # elif pred == 5:
+        #     result = 'NON-CRIMINAL (SUBJECT SPECIFIED)'
+        # elif pred == 6:
+        #     result = 'MOTOR VEHICLE THEFT'
+        # elif pred == 7:
+        #     result = 'DECEPTIVE PRACTICE'
+        # elif pred == 8:
+        #     result = 'OTHER OFFENSE'
+        # elif pred == 9:
+        #     result = 'THEFT'
+        # elif pred == 10:
+        #     result = 'HOMICIDE'
+        # elif pred == 11:
+        #     result = 'ARSON'
+        # elif pred == 12:
+        #     result = 'PUBLIC PEACE VIOLATION'
+        # elif pred == 13:
+        #     result = 'INTIMIDATION'
+        # elif pred == 14:
+        #     result = 'CONCEALED CARRY LICENSE VIOLATION'
+        # elif pred == 15:
+        #     result = 'PROSTITUTION'
+        # elif pred == 16:
+        #     result = 'CRIM SEXUAL ASSAULT'
+        # elif pred == 17:
+        #     result = 'KIDNAPPING'
+        # elif pred == 18:
+        #     result = 'STALKING'
+        # elif pred == 19:
+        #     result = 'OTHER NARCOTIC VIOLATION'
+        # elif pred == 20:
+        #     result = 'BATTERY'
+        # elif pred == 21:
+        #     result = 'ASSAULT'
+        # elif pred == 22:
+        #     result = 'BURGLARY'
+        # elif pred == 23:
+        #     result = 'CRIMINAL TRESPASS'
+        # elif pred == 24:
+        #     result = 'ROBBERY'
+        # elif pred == 25:
+        #     result = 'INTERFERENCE WITH PUBLIC OFFICER'
+        # elif pred == 26:
+        #     result = 'CRIMINAL DAMAGE'
+        # elif pred == 27:
+        #     result = 'OFFENSE INVOLVING CHILDREN'
+        # elif pred == 28:
+        #     result = 'SEX OFFENSE'
+        # elif pred == 29:
+        #     result = 'OBSCENITY'
+        # elif pred == 30:
+        #     result = 'NON - CRIMINAL'
+        # elif pred == 31:
+        #     result = 'WEAPONS VIOLATION'
+        # elif pred == 32:
+        #     result = 'LIQUOR LAW VIOLATION'
+        # else:
+        #     result = 'OTHER'
 
         applic_id = applic.insert_one({
             'first_name': first_name,
@@ -185,7 +181,7 @@ def applications():
             'phone': phone,
             'locations': locations,
             'application': application,
-            'classifier': result,
+            # 'classifier': result,
             'created': created,
             'level': level,
             'history': history,
@@ -324,9 +320,17 @@ def send_precinct():
         sessionkey = cipherrsa.encrypt(sessionkey)
         sessionkey = bytes(sessionkey)
         applic.update_one({'application': text},
-                          {"$set": {'check': None, 'level': 'worker3',
-                                    'sessionkey': sessionkey, 'application': ciphertext, 'signature': sig,
-                                    'publickey1': db.find_one({'username': session['username']})['publickey']}})
+                          {"$set":
+
+                               {'check': None,
+                                'level': 'worker3',
+                                'sessionkey': sessionkey,
+                                'application': ciphertext,
+                                'signature': sig,
+                                'publickey1': db.find_one({'username': session['username']})['publickey']
+                                }
+                           }
+                          )
 
         flash('You sent the application!')
 
@@ -364,7 +368,7 @@ def close():
 def choose_investigator():
     text = request.args.get('text')
     investigator = request.args.get('investigator')
-    investigator = "worker2.1"
+    # investigator = "worker2.1"
     applic.update_one({'application': text}, {"$set": {'level': investigator, 'check': None}})
     flash("You sent application to investigator!")
     return redirect('/profile')
@@ -482,10 +486,10 @@ def register_page():
                     rank_show = 'Theft Investigator'
                 elif rank == 'worker2.3':
                     rank_show = 'Abduction Investigator'
-
-            else:
-                flash('Key entered incorrectly! Contact the main office to confirm the validity of the key!')
-                return redirect(url_for('register_page'))
+                break
+        else:
+            flash('Key entered incorrectly! Contact the main office to confirm the validity of the key!')
+            return redirect(url_for('register_page'))
         session['username'] = username
         session['password'] = password
 
