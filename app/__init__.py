@@ -12,4 +12,5 @@ CORS(app)
 app.debug = True
 
 from app import routes
-app.run()
+if __name__ == '__main__':
+    app.run()
