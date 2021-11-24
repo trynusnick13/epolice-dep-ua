@@ -368,7 +368,6 @@ def close():
 def choose_investigator():
     text = request.args.get('text')
     investigator = request.args.get('investigator')
-    # investigator = "worker2.1"
     applic.update_one({'application': text}, {"$set": {'level': investigator, 'check': None}})
     flash("You sent application to investigator!")
     return redirect('/profile')
