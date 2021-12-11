@@ -1,9 +1,11 @@
 import hashlib
+import logging
 import os
 import re
 from datetime import datetime
 
 import pymongo
+import requests
 from Cryptodome import Random
 from Cryptodome.Cipher import AES
 from Cryptodome.Cipher import PKCS1_OAEP
@@ -32,21 +34,29 @@ applic = applic['applications']
 @app.route('/')
 @app.route('/index')
 def index():
+    user_name = session.get("username")
+    logging.info("%s On index page (/index)", user_name if user_name else "Guest")
     return render_template('index.html')
 
 
 @app.route('/index1')
 def index1():
+    user_name = session.get("username")
+    logging.info("%s On index page (/index1)", user_name if user_name else "Guest")
     return render_template('index1.html')
 
 
 @app.route('/contact')
 def contact():
+    user_name = session.get("username")
+    logging.info("%s On contact page (/contact)", user_name if user_name else "Guest")
     return render_template('contact.html')
 
 
 @app.route('/uploads', methods=['GET', 'POST'])
 def download():
+    user_name = session.get("username")
+    logging.info("%s Downloads template (/uploads)", user_name if user_name else "Guest")
     return send_file('files/application_templates.pdf', as_attachment=True)
 
 
@@ -68,6 +78,8 @@ def same_applications():
 
 @app.route('/database')
 def database():
+    user_name = session.get("username")
+    logging.info("%s is looking for all the cases (/database)", user_name if user_name else "Guest")
     data_app = applic.find({})
     open = list()
     finished = list()
@@ -83,6 +95,8 @@ def database():
 
 @app.route('/application', methods=["GET", "POST"])
 def applications():
+    user_name = session.get("username")
+    logging.info("%s Applies the application (/application)", user_name if user_name else "Guest")
     form = ApplicationForm(request.form)
     if request.method == "POST":
         first_name = form.first_name.data
@@ -96,84 +110,14 @@ def applications():
         check = None
         status = 'Not reviewed'
 
-        # lemmatizer = WordNetLemmatizer()
-        # stop_words = set(stopwords.words('english'))
-        # word_tokens = word_tokenize(application)
-        # filtered_sentence = [w for w in word_tokens if not w in stop_words]
-        # singles = ' '.join([lemmatizer.lemmatize(plural).upper() for plural in filtered_sentence])
-        #
-        # loaded_model = pickle.load(open('classifiers/finalized_model.sav', 'rb'))
-        # pred = loaded_model.predict([singles])
-        # pred = int(pred[0])
-        #
-        # if pred == 0:
-        #     result = 'GAMBLING'
-        # elif pred == 1:
-        #     result = 'HUMAN TRAFFICKING'
-        # elif pred == 2:
-        #     result = 'NON-CRIMINAL'
-        # elif pred == 3:
-        #     result = 'PUBLIC INDECENCY'
-        # elif pred == 4:
-        #     result = 'NARCOTICS'
-        # elif pred == 5:
-        #     result = 'NON-CRIMINAL (SUBJECT SPECIFIED)'
-        # elif pred == 6:
-        #     result = 'MOTOR VEHICLE THEFT'
-        # elif pred == 7:
-        #     result = 'DECEPTIVE PRACTICE'
-        # elif pred == 8:
-        #     result = 'OTHER OFFENSE'
-        # elif pred == 9:
-        #     result = 'THEFT'
-        # elif pred == 10:
-        #     result = 'HOMICIDE'
-        # elif pred == 11:
-        #     result = 'ARSON'
-        # elif pred == 12:
-        #     result = 'PUBLIC PEACE VIOLATION'
-        # elif pred == 13:
-        #     result = 'INTIMIDATION'
-        # elif pred == 14:
-        #     result = 'CONCEALED CARRY LICENSE VIOLATION'
-        # elif pred == 15:
-        #     result = 'PROSTITUTION'
-        # elif pred == 16:
-        #     result = 'CRIM SEXUAL ASSAULT'
-        # elif pred == 17:
-        #     result = 'KIDNAPPING'
-        # elif pred == 18:
-        #     result = 'STALKING'
-        # elif pred == 19:
-        #     result = 'OTHER NARCOTIC VIOLATION'
-        # elif pred == 20:
-        #     result = 'BATTERY'
-        # elif pred == 21:
-        #     result = 'ASSAULT'
-        # elif pred == 22:
-        #     result = 'BURGLARY'
-        # elif pred == 23:
-        #     result = 'CRIMINAL TRESPASS'
-        # elif pred == 24:
-        #     result = 'ROBBERY'
-        # elif pred == 25:
-        #     result = 'INTERFERENCE WITH PUBLIC OFFICER'
-        # elif pred == 26:
-        #     result = 'CRIMINAL DAMAGE'
-        # elif pred == 27:
-        #     result = 'OFFENSE INVOLVING CHILDREN'
-        # elif pred == 28:
-        #     result = 'SEX OFFENSE'
-        # elif pred == 29:
-        #     result = 'OBSCENITY'
-        # elif pred == 30:
-        #     result = 'NON - CRIMINAL'
-        # elif pred == 31:
-        #     result = 'WEAPONS VIOLATION'
-        # elif pred == 32:
-        #     result = 'LIQUOR LAW VIOLATION'
-        # else:
-        #     result = 'OTHER'
+        response = requests.post(
+            "https://nlp-police-department-service.herokuapp.com/application",
+
+            json={
+                'application': application,
+            }
+        )
+        result = response.json().get("result", "")
 
         applic_id = applic.insert_one({
             'first_name': first_name,
@@ -181,7 +125,7 @@ def applications():
             'phone': phone,
             'locations': locations,
             'application': application,
-            # 'classifier': result,
+            'classifier': result,
             'created': created,
             'level': level,
             'history': history,
@@ -197,6 +141,8 @@ def applications():
 
 @app.route('/profile', methods=["GET", "POST"])
 def profile():
+    user_name = session.get("username")
+    logging.info("%s On profile page (/profile)", user_name if user_name else "Guest")
     try:
         data_main = db.find({'username': session['username'],
                              'password': session['password']})
@@ -246,6 +192,8 @@ def profile():
 
 @app.route('/photo', methods=["GET", "POST"])
 def photo():
+    user_name = session.get("username")
+    logging.info("%s Updates photo (/photo)", user_name if user_name else "Guest")
     if request.method == 'POST':
         f = request.files['file']
 
@@ -258,6 +206,8 @@ def photo():
 
 @app.route('/check_precinct')
 def check_precinct():
+    user_name = session.get("username")
+    logging.info("%s Check precinct photo (/check_precinct)", user_name if user_name else "Guest")
     text = request.args.get('text')
     id = ObjectId(request.args.get('id'))
     if session['rank'] == 'worker1':
@@ -272,7 +222,7 @@ def check_precinct():
     elif session['rank'] == 'worker3':
         privatekey = RSA.importKey(db.find_one({'rank': 'worker3'})['privatekey'])
         cipherrsa = PKCS1_OAEP.new(privatekey)
-        print(applic.find_one({'_id': id})['sessionkey'])
+        logging.info(applic.find_one({'_id': id})['sessionkey'])
         print(type(applic.find_one({'_id': id})['sessionkey']))
         sessionkey = cipherrsa.decrypt(applic.find_one({'_id': id})['sessionkey'])
         ciphertext = applic.find_one({'_id': id})['application']
@@ -375,6 +325,8 @@ def choose_investigator():
 
 @app.route('/login/', methods=["GET", "POST"])
 def login():
+    user_name = session.get("username")
+    logging.info("%s Log in", user_name if user_name else "Guest")
     form = LoginForm(request.form)
     if request.method == "POST":
         username = form.username.data
@@ -389,6 +341,7 @@ def login():
             session['rank'] = data['rank']
 
             if data['username']:
+                logging.info("%s Successfully log in", data['username'])
                 return redirect('/profile')
             else:
                 flash("Invalid username/password")
@@ -418,6 +371,8 @@ def logout():
 
 @app.route('/register/', methods=["GET", "POST"])
 def register_page():
+    user_name = session.get("username")
+    logging.info("%s Log in", user_name if user_name else "Guest")
     form = RegistrationForm(request.form)
     if request.method == "POST":
         username = form.username.data
@@ -452,11 +407,11 @@ def register_page():
             flash('Passwords must match! Try again!')
             return redirect(url_for('register_page'))
 
-        if (re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$', password)):
-            pass
-        else:
-            flash('Password is not strong enough! Try again!')
-            return redirect(url_for('register_page'))
+        # if (re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$', password)):
+        #     pass
+        # else:
+        #     flash('Password is not strong enough! Try again!')
+        #     return redirect(url_for('register_page'))
 
         password = str(hashlib.md5(str(password).encode()).hexdigest())
         created = datetime.utcnow()
@@ -508,7 +463,7 @@ def register_page():
             'privatekey': bytes(privatekey.exportKey('PEM')),
             'publickey': bytes(publickey.exportKey('PEM'))
         })
-
+        logging.info("%s successfully registered", username)
         flash('Thanks for registering')
         return redirect('/profile')
 
