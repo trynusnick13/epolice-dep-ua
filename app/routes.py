@@ -68,9 +68,9 @@ def same_applications():
     your = list()
     same = list()
     for data in data_app:
-        if data['classifier'] == cat:
+        if data.get('classifier') == cat:
             same.append(data)
-        if (data['level'] == session['rank']) and (data['check'] == session['username']):
+        if (data.get('level') == session.get('rank')) and (data.get('check') == session.get('username')):
             your.append(data)
 
     return render_template('same_applications.html', new=your, same=same)
