@@ -21,7 +21,8 @@ from app.forms import LoginForm, RegistrationForm, ApplicationForm
 from app.locations import lc
 
 db_main = pymongo.MongoClient(
-    "mongodb+srv://police-dep:11111@cluster0.w7nvt.mongodb.net/users?ssl=true&ssl_cert_reqs=CERT_NONE"
+    "mongodb://root:rootpassword@mongo",
+    port=27017,
 )
 db = db_main["users"]
 db = db["users"]
